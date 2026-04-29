@@ -1,65 +1,419 @@
-import Image from "next/image";
+import { AiAdvisor } from "@/components/AiAdvisor";
+import { ArrowIcon } from "@/components/ArrowIcon";
+import { FaqAccordion } from "@/components/FaqAccordion";
+import { FeatureTabs } from "@/components/FeatureTabs";
+import { Footer } from "@/components/Footer";
+import { LeadForm } from "@/components/LeadForm";
+import { SiteNav } from "@/components/SiteNav";
+
+const problemCards = [
+  {
+    title: "Owners cannot see what the land can become",
+    copy: "Survey numbers and memory are not enough for urban and NRI owners. They need a clean land profile before they can trust any use case.",
+  },
+  {
+    title: "Farmers need access without buying land",
+    copy: "Many capable farmers and operators need land access, not ownership. PlotCare is designed to make that matching process structured.",
+  },
+  {
+    title: "Idle land needs a managed operating layer",
+    copy: "Land activation is not one transaction. It needs mapping, suitability checks, partner matching, agreements, and ongoing updates.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Mushroom cultivation",
+    label: "Low-acreage pilot thesis",
+    copy: "A strong candidate for shaded, humid plots where controlled growing sheds are practical.",
+  },
+  {
+    title: "Prawn and fish farming",
+    label: "Water-led opportunity",
+    copy: "Worth validating only where water access, permissions, and operator experience are strong.",
+  },
+  {
+    title: "Solar land leasing",
+    label: "Open-land thesis",
+    copy: "Relevant for flat, unshaded plots with grid proximity and formal lease review.",
+  },
+  {
+    title: "Nursery and medicinal herbs",
+    label: "Demand-nearby thesis",
+    copy: "Useful for plots near towns where local buyer demand can be validated early.",
+  },
+  {
+    title: "Sericulture and beekeeping",
+    label: "Microclimate thesis",
+    copy: "Suitable only after checking nearby vegetation, farmer capability, and seasonal risk.",
+  },
+  {
+    title: "Traditional crop match",
+    label: "Farmer-partner thesis",
+    copy: "For owners who want a practical first activation with local crop knowledge.",
+  },
+];
+
+const betaFeedback = [
+  {
+    quote:
+      "I inherited land near Vizag and had no practical way to judge what to do with it. A report-first approach feels much more trustworthy than jumping into a lease.",
+    person: "Urban landowner interview, Hyderabad",
+  },
+  {
+    quote:
+      "If the owner knows the land is being assessed properly, farmer matching becomes easier. The missing piece is a neutral workflow everyone can trust.",
+    person: "Farmer partner discovery call, AP coast",
+  },
+  {
+    quote:
+      "For investors, the interesting part is not just land discovery. It is whether PlotCare can repeat the operating playbook district by district.",
+    person: "Angel investor feedback, pre-seed review",
+  },
+];
+
+const faqs = [
+  {
+    question: "Is PlotCare already operating live projects?",
+    answer:
+      "PlotCare is pre-launch. This site is designed to collect landowner, farmer, and investor interest while the first validation pilots are prepared.",
+  },
+  {
+    question: "Will the first Land Intelligence Report be legally binding?",
+    answer:
+      "No. The first report is advisory. It helps a landowner understand possible uses, risks, and next steps before any formal agreement or legal review.",
+  },
+  {
+    question: "Can a landowner use PlotCare without visiting the land?",
+    answer:
+      "That is the core customer problem. PlotCare is designed for absentee owners who can share survey, village, and location context remotely.",
+  },
+  {
+    question: "How will farmers be verified?",
+    answer:
+      "Verification is part of the planned operating workflow. The initial pilot will validate references, identity checks, land-use fit, and partner reliability before scale.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="site-shell">
+      <SiteNav />
+
+      <section className="hero" id="top">
+        <div>
+          <div className="eyebrow"><span className="dot" /> Starting with Andhra Pradesh idle land</div>
+          <h1 className="headline">
+            Your land exists. Make it <span>earn.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="subhead">
+            PlotCare helps landowners understand what their exact plot can grow,
+            lease, or produce, then prepares the path toward verified farmer and
+            production partner activation.
+          </p>
+          <div className="inline-actions" style={{ marginTop: 34 }}>
+            <a className="button button-primary" href="#lead-form">
+              Request land report <ArrowIcon />
+            </a>
+            <a className="button button-outline" href="#how-it-works">
+              See workflow
+            </a>
+          </div>
+          <div className="hero-proof">
+            <div className="proof-chip">Pre-launch validation focused on Visakhapatnam and AP landowners.</div>
+            <div className="proof-chip">Designed for absentee, urban, and NRI land ownership realities.</div>
+            <div className="proof-chip">No guaranteed income claims; suitability comes before activation.</div>
+          </div>
+          <AiAdvisor
+            source="hero"
+            placeholder="Describe your land's location, size, water access, or current condition..."
+          />
+        </div>
+
+        <div id="lead-form">
+          <LeadForm
+            mode="customer"
+            source="hero"
+            title="Analyse your land free"
+            copy="Join the first PlotCare validation list and get a structured review of your plot's activation potential."
+          />
+        </div>
+      </section>
+
+      <section className="section paper">
+        <div className="section-inner">
+          <p className="section-kicker">The problem</p>
+          <h2 className="section-title">
+            Idle land is not just unused property. It is an unmanaged asset class.
+          </h2>
+          <p className="section-copy">
+            PlotCare focuses on the trust gap between landowners who are far from
+            their plots and local operators who could activate that land.
+          </p>
+          <div className="grid-3">
+            {problemCards.map((card) => (
+              <article className="card" key={card.title}>
+                <h3>{card.title}</h3>
+                <p>{card.copy}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section dark topo" id="how-it-works">
+        <div className="section-inner">
+          <p className="section-kicker">How it works</p>
+          <h2 className="section-title">From plot details to an activation plan.</h2>
+          <div className="grid-3">
+            {[
+              ["Locate", "Collect survey, village, and map context to form a digital plot profile."],
+              ["Assess", "Rank land use cases by fit, risk, effort, and expected revenue logic."],
+              ["Activate", "Match the right partner type and prepare a pilot-ready agreement workflow."],
+            ].map(([title, copy]) => (
+              <article className="card dark-card" key={title}>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section sage" id="land-report">
+        <div className="section-inner grid-2" style={{ alignItems: "center" }}>
+          <div>
+            <p className="section-kicker">Land Intelligence Report</p>
+            <h2 className="section-title">
+              A decision layer before anyone touches the land.
+            </h2>
+            <p className="section-copy">
+              The report is designed to tell owners what is realistic, what is
+              risky, and what to validate next. It keeps the pitch honest:
+              suitability first, activation second.
+            </p>
+            <div className="report-points">
+              <div><strong>Land area</strong><span>Owner-provided acreage and location context</span></div>
+              <div><strong>Water and shade</strong><span>Suitability signals before use-case matching</span></div>
+              <div><strong>Investment reality</strong><span>Clear zero, shared, or owner-funded assumptions</span></div>
+            </div>
+          </div>
+          <div className="dashboard">
+            <div className="map-window">
+              <div className="plot-shape" />
+            </div>
+            <div className="dashboard-row"><span>Plot profile</span><strong>2.4 acres, AP coast</strong></div>
+            <div className="dashboard-row"><span>Top fit</span><strong>Mushroom + nursery pilot</strong></div>
+            <div className="dashboard-row"><span>Next step</span><strong>Water and access validation</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section paper use-cases-section" id="use-cases">
+        <div className="section-inner">
+          <p className="section-kicker">Land use cases</p>
+          <h2 className="section-title">
+            From shaded plots to coastal land, every activation needs a fit check.
+          </h2>
+          <p className="section-copy">
+            These are not guaranteed returns. They are validation paths that
+            PlotCare can help a landowner evaluate before committing land,
+            money, or trust to a partner.
+          </p>
+          <div className="mushroom-feature">
+            <img
+              src="/images/mushroom-cultivation.png"
+              alt="Mushroom cultivation bags growing inside a tidy shed"
+            />
+            <div>
+              <p className="section-kicker">Featured use case</p>
+              <h3>Mushroom cultivation for shaded, humid plots</h3>
+              <p>
+                The first report flow can check shade, water, access, partner
+                availability, and setup assumptions before positioning mushroom
+                cultivation as a credible pilot.
+              </p>
+            </div>
+          </div>
+          <div className="use-case-grid">
+            {useCases.map((item) => (
+              <article className="use-card" key={item.title}>
+                <span>{item.label}</span>
+                <h3>{item.title}</h3>
+                <p>{item.copy}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section dark" id="platform">
+        <div className="section-inner">
+          <p className="section-kicker">The platform</p>
+          <h2 className="section-title">
+            Everything needed to move from idle plot to managed activation.
+          </h2>
+          <FeatureTabs />
+        </div>
+      </section>
+
+      <section className="section paper landowner-section">
+        <div className="section-inner grid-2" style={{ alignItems: "center" }}>
+          <div>
+            <p className="section-kicker">For landowners</p>
+            <h2 className="section-title">
+              Whether you are in Bangalore, Dubai, or ten minutes away, your land gets a clearer plan.
+            </h2>
+            <ul className="benefit-list">
+              <li>Know where your plot is and what condition it appears to be in.</li>
+              <li>Understand what the land can realistically grow, lease, or support.</li>
+              <li>Shortlist partner types only after the land-use thesis is checked.</li>
+              <li>Store report notes, documents, and follow-up tasks in one workflow.</li>
+              <li>Track validation milestones before any formal commercial launch.</li>
+            </ul>
+          </div>
+          <div className="phone-mock" aria-label="PlotCare mobile dashboard preview">
+            <div className="phone-screen">
+              <strong>PlotCare</strong>
+              <div className="phone-tile"><span>Plot</span><b>VZK-2841 · 2.4 ac</b></div>
+              <div className="phone-tile"><span>Top thesis</span><b>Mushroom + nursery</b></div>
+              <div className="phone-tile"><span>Readiness score</span><b>78 / 100</b></div>
+              <div className="phone-tile"><span>Next validation</span><b>Water access check</b></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section paper" id="for-farmers">
+        <div className="section-inner grid-2" style={{ alignItems: "start" }}>
+          <div>
+            <p className="section-kicker">For farmers and operators</p>
+            <h2 className="section-title">
+              Access land without carrying the full cost of ownership.
+            </h2>
+            <p className="section-copy">
+              PlotCare will validate a farmer partner network for cultivation,
+              nursery, mushroom, aquaculture, and other land-backed production
+              models. The goal is practical access, clear terms, and better
+              owner trust.
+            </p>
+            <a className="button button-dark" href="#farmer-form">
+              Apply as farmer partner <ArrowIcon />
+            </a>
+          </div>
+          <div id="farmer-form">
+            <LeadForm
+              mode="customer"
+              source="farmer_partner"
+              title="Farmer partner interest"
+              copy="Tell us where you operate and what kind of land you are looking for."
+              defaultAudience="farmer"
+              light
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="section sage">
+        <div className="section-inner">
+          <p className="section-kicker">Early feedback</p>
+          <h2 className="section-title">
+            The response we are designing for: cautious, practical, and trust-first.
+          </h2>
+          <p className="section-copy">
+            These are discovery and beta-style comments, not paid customer
+            testimonials. Replace them with verified customer reviews after the
+            first pilots.
+          </p>
+          <div className="review-grid">
+            {betaFeedback.map((item) => (
+              <figure className="quote-card" key={item.person}>
+                <blockquote>&ldquo;{item.quote}&rdquo;</blockquote>
+                <figcaption>{item.person}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section sage" id="trust">
+        <div className="section-inner">
+          <p className="section-kicker">Trust posture</p>
+          <h2 className="section-title">
+            Designed for cautious owners, not speculative promises.
+          </h2>
+          <div className="grid-4">
+            {[
+              ["Advisory first", "Reports guide decisions without guaranteeing income."],
+              ["Pilot verification", "Partner checks are validation targets before scale."],
+              ["Legal review", "Templates and agreements require qualified review before execution."],
+              ["Owner control", "Owners choose whether to activate, hold, or request deeper review."],
+            ].map(([title, copy]) => (
+              <article className="card" key={title}>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section paper">
+        <div className="section-inner">
+          <p className="section-kicker">How PlotCare can make money</p>
+          <h2 className="section-title">
+            A simple model that starts with insight and grows with activation.
+          </h2>
+          <div className="revenue-grid">
+            {[
+              ["Land report", "A diagnostic entry product for owners not ready to activate yet."],
+              ["Owner workspace", "Subscription potential for document readiness, reports, and updates."],
+              ["Activation commission", "Future transaction-linked revenue after pilots prove operating reliability."],
+            ].map(([title, copy]) => (
+              <article className="revenue-card" key={title}>
+                <span>Planned model</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </article>
+            ))}
+          </div>
+          <p className="model-note">
+            No revenue is claimed yet. This section explains the business model
+            investors can evaluate as validation milestones become real.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section className="section paper" id="faq">
+        <div className="section-inner">
+          <p className="section-kicker">Questions</p>
+          <h2 className="section-title">What early users should know.</h2>
+          <FaqAccordion items={faqs} />
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="section dark topo" id="final-cta">
+        <div className="section-inner grid-2" style={{ alignItems: "center" }}>
+          <div>
+            <p className="section-kicker">Join validation</p>
+            <h2 className="section-title">
+              Your land has been waiting. Now it gets a plan.
+            </h2>
+            <p className="section-copy">
+              Join the first validation cohort for Andhra Pradesh landowners and
+              help shape the product before launch.
+            </p>
+          </div>
+          <LeadForm
+            mode="customer"
+            source="final_cta"
+            title="Get your first review"
+            copy="No spam and no income guarantees. Just a structured next step for your land."
+          />
+        </div>
+      </section>
+
+      <Footer />
+    </main>
   );
 }
