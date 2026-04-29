@@ -8,6 +8,9 @@ type AiAdvisorProps = {
   placeholder: string;
 };
 
+const staticExport = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+const advisorEndpoint = process.env.NEXT_PUBLIC_AI_ENDPOINT ?? (staticExport ? "" : "/api/ai");
+
 export function AiAdvisor({ source, placeholder }: AiAdvisorProps) {
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState("");
@@ -24,7 +27,15 @@ export function AiAdvisor({ source, placeholder }: AiAdvisorProps) {
     setResponse("");
 
     try {
-      const res = await fetch("/api/ai", {
+      if (!advisorEndpoint) {
+        setResponse(
+          "For this static GitHub Pages demo, PlotCare would treat your note as a report request and validate plot size, water access, shade, road access, and partner availability before suggesting an activation route.",
+        );
+        setMessage("");
+        return;
+      }
+
+      const res = await fetch(advisorEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: trimmed, source }),

@@ -7,6 +7,9 @@ import { LeadForm } from "@/components/LeadForm";
 import { SiteNav } from "@/components/SiteNav";
 import Image from "next/image";
 
+const basePath = process.env.PAGES_BASE_PATH ?? "";
+const imagePath = (path: string) => `${basePath}${path}`;
+
 const problemCards = [
   {
     title: "Owners cannot see what the land can become",
@@ -27,7 +30,7 @@ const useCases = [
     title: "Prawn and fish farming",
     label: "Water-led opportunity",
     copy: "Works only when water retention, inlet quality, permissions, and an experienced operator are confirmed.",
-    image: "/images/aquaculture-ponds-real.jpg",
+    image: imagePath("/images/aquaculture-ponds-real.jpg"),
     alt: "Real fish farming pond with aeration equipment",
     requirements: ["Min land 0.5-1 ac", "Water depth 4-6 ft", "Temp 24-32 C"],
   },
@@ -35,7 +38,7 @@ const useCases = [
     title: "Solar land leasing",
     label: "Open-land thesis",
     copy: "Best for flat, non-shaded land where road access, grid proximity, and lease tenure can be checked early.",
-    image: "/images/solar-land-lease-real.jpg",
+    image: imagePath("/images/solar-land-lease-real.jpg"),
     alt: "Real solar panels installed across open land",
     requirements: ["Min land 2-5 ac", "Low shade", "Grid access nearby"],
   },
@@ -43,7 +46,7 @@ const useCases = [
     title: "Nursery and medicinal herbs",
     label: "Demand-nearby thesis",
     copy: "Needs reliable water, shade-net or greenhouse planning, and nearby buyers before planting inventory.",
-    image: "/images/nursery-herbs-real.jpg",
+    image: imagePath("/images/nursery-herbs-real.jpg"),
     alt: "Real plant nursery rows inside a protected growing area",
     requirements: ["Min land 0.25 ac", "Temp 20-34 C", "Daily water access"],
   },
@@ -51,7 +54,7 @@ const useCases = [
     title: "Sericulture and beekeeping",
     label: "Microclimate thesis",
     copy: "Depends on vegetation, low chemical drift, seasonal flowering, and a trained local caretaker.",
-    image: "/images/beekeeping-sericulture-real.jpg",
+    image: imagePath("/images/beekeeping-sericulture-real.jpg"),
     alt: "Real honey bees on a hive frame",
     requirements: ["Min land 0.25 ac", "Low pesticide zone", "Shade and flora"],
   },
@@ -59,7 +62,7 @@ const useCases = [
     title: "Traditional crop match",
     label: "Farmer-partner thesis",
     copy: "For owners who want a practical first activation with local crop knowledge and simple seasonal terms.",
-    image: "/images/crop-match-real.jpg",
+    image: imagePath("/images/crop-match-real.jpg"),
     alt: "Real farmers inspecting a healthy crop field",
     requirements: ["Min land 1 ac", "Soil and crop history", "Seasonal water"],
   },
@@ -276,7 +279,7 @@ export default function Home() {
           </p>
           <div className="mushroom-feature">
             <Image
-              src="/images/mushroom-cultivation.png"
+              src={imagePath("/images/mushroom-cultivation.png")}
               alt="Mushroom cultivation bags growing inside a tidy shed"
               width={1200}
               height={800}

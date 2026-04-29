@@ -46,6 +46,9 @@ const districts = [
   "Not sure",
 ];
 
+const staticExport = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+const leadsEndpoint = process.env.NEXT_PUBLIC_LEADS_ENDPOINT ?? (staticExport ? "" : "/api/leads");
+
 export function LeadForm(props: LeadFormProps) {
   const [audience, setAudience] = useState<Audience>(
     props.mode === "customer" ? props.defaultAudience ?? "landowner" : "landowner",
@@ -86,7 +89,19 @@ export function LeadForm(props: LeadFormProps) {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch("/api/leads", {
+      if (!leadsEndpoint) {
+        form.reset();
+        setStatus({
+          type: "success",
+          message:
+            props.mode === "investor"
+              ? "Investor interest captured for this static demo. Connect a lead endpoint before launch."
+              : "Your request is captured for this static demo. Connect a lead endpoint before launch.",
+        });
+        return;
+      }
+
+      const response = await fetch(leadsEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
