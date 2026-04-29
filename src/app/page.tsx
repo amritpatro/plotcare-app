@@ -5,6 +5,7 @@ import { FeatureTabs } from "@/components/FeatureTabs";
 import { Footer } from "@/components/Footer";
 import { LeadForm } from "@/components/LeadForm";
 import { SiteNav } from "@/components/SiteNav";
+import Image from "next/image";
 
 const problemCards = [
   {
@@ -23,35 +24,88 @@ const problemCards = [
 
 const useCases = [
   {
-    title: "Mushroom cultivation",
-    label: "Low-acreage pilot thesis",
-    copy: "A strong candidate for shaded, humid plots where controlled growing sheds are practical.",
-  },
-  {
     title: "Prawn and fish farming",
     label: "Water-led opportunity",
-    copy: "Worth validating only where water access, permissions, and operator experience are strong.",
+    copy: "Works only when water retention, inlet quality, permissions, and an experienced operator are confirmed.",
+    image: "/images/aquaculture-ponds-real.jpg",
+    alt: "Real fish farming pond with aeration equipment",
+    requirements: ["Min land 0.5-1 ac", "Water depth 4-6 ft", "Temp 24-32 C"],
   },
   {
     title: "Solar land leasing",
     label: "Open-land thesis",
-    copy: "Relevant for flat, unshaded plots with grid proximity and formal lease review.",
+    copy: "Best for flat, non-shaded land where road access, grid proximity, and lease tenure can be checked early.",
+    image: "/images/solar-land-lease-real.jpg",
+    alt: "Real solar panels installed across open land",
+    requirements: ["Min land 2-5 ac", "Low shade", "Grid access nearby"],
   },
   {
     title: "Nursery and medicinal herbs",
     label: "Demand-nearby thesis",
-    copy: "Useful for plots near towns where local buyer demand can be validated early.",
+    copy: "Needs reliable water, shade-net or greenhouse planning, and nearby buyers before planting inventory.",
+    image: "/images/nursery-herbs-real.jpg",
+    alt: "Real plant nursery rows inside a protected growing area",
+    requirements: ["Min land 0.25 ac", "Temp 20-34 C", "Daily water access"],
   },
   {
     title: "Sericulture and beekeeping",
     label: "Microclimate thesis",
-    copy: "Suitable only after checking nearby vegetation, farmer capability, and seasonal risk.",
+    copy: "Depends on vegetation, low chemical drift, seasonal flowering, and a trained local caretaker.",
+    image: "/images/beekeeping-sericulture-real.jpg",
+    alt: "Real honey bees on a hive frame",
+    requirements: ["Min land 0.25 ac", "Low pesticide zone", "Shade and flora"],
   },
   {
     title: "Traditional crop match",
     label: "Farmer-partner thesis",
-    copy: "For owners who want a practical first activation with local crop knowledge.",
+    copy: "For owners who want a practical first activation with local crop knowledge and simple seasonal terms.",
+    image: "/images/crop-match-real.jpg",
+    alt: "Real farmers inspecting a healthy crop field",
+    requirements: ["Min land 1 ac", "Soil and crop history", "Seasonal water"],
   },
+];
+
+const mushroomRequirements = [
+  "Min land 0.05-0.25 ac",
+  "Temp 20-30 C",
+  "Humidity 70-90%",
+  "Shade and clean water",
+];
+
+const trustSafeguards = [
+  {
+    icon: "ID",
+    title: "Aadhaar/KYC-ready farmers",
+    copy: "Partner onboarding is designed around identity checks, references, and local operating history before owner approval.",
+  },
+  {
+    icon: "LAW",
+    title: "AP land-use review",
+    copy: "Lease terms and use-case recommendations are flagged for Andhra Pradesh land, zoning, and tenancy review.",
+  },
+  {
+    icon: "DOC",
+    title: "Encrypted document vault",
+    copy: "Survey notes, ownership files, reports, and partner documents stay organized behind account access.",
+  },
+  {
+    icon: "MAP",
+    title: "Satellite-crosschecked boundaries",
+    copy: "Plot locations can be checked against satellite views, owner inputs, and government map references.",
+  },
+  {
+    icon: "PAY",
+    title: "Escrow-ready revenue flow",
+    copy: "Revenue tracking is structured for transparent crop updates, partner payouts, and owner transfer records.",
+  },
+];
+
+const trustTags = [
+  "MeeBhoomi ready",
+  "Bhuvan reference",
+  "DILRMP records",
+  "Aadhaar KYC",
+  "DigiLocker workflow",
 ];
 
 const betaFeedback = [
@@ -221,9 +275,11 @@ export default function Home() {
             money, or trust to a partner.
           </p>
           <div className="mushroom-feature">
-            <img
+            <Image
               src="/images/mushroom-cultivation.png"
               alt="Mushroom cultivation bags growing inside a tidy shed"
+              width={1200}
+              height={800}
             />
             <div>
               <p className="section-kicker">Featured use case</p>
@@ -233,17 +289,41 @@ export default function Home() {
                 availability, and setup assumptions before positioning mushroom
                 cultivation as a credible pilot.
               </p>
+              <div className="requirement-list">
+                {mushroomRequirements.map((requirement) => (
+                  <span key={requirement}>{requirement}</span>
+                ))}
+              </div>
             </div>
           </div>
           <div className="use-case-grid">
             {useCases.map((item) => (
               <article className="use-card" key={item.title}>
-                <span>{item.label}</span>
-                <h3>{item.title}</h3>
-                <p>{item.copy}</p>
+                <Image
+                  className="use-card-image"
+                  src={item.image}
+                  alt={item.alt}
+                  width={900}
+                  height={620}
+                />
+                <div className="use-card-body">
+                  <span>{item.label}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.copy}</p>
+                  <div className="requirement-list compact">
+                    {item.requirements.map((requirement) => (
+                      <span key={requirement}>{requirement}</span>
+                    ))}
+                  </div>
+                </div>
               </article>
             ))}
           </div>
+          <p className="requirements-note">
+            Land, temperature, water, shade, and permit ranges are indicative
+            starting checks. The final report should confirm local conditions
+            before any owner or farmer commits.
+          </p>
         </div>
       </section>
 
@@ -336,25 +416,30 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section sage" id="trust">
-        <div className="section-inner">
-          <p className="section-kicker">Trust posture</p>
+      <section className="section sage protection-section" id="trust">
+        <div className="section-inner protection-inner">
+          <p className="section-kicker dot-kicker">Built on trust</p>
           <h2 className="section-title">
-            Designed for cautious owners, not speculative promises.
+            Your land is your most valuable asset. We are built around protecting it.
           </h2>
-          <div className="grid-4">
-            {[
-              ["Advisory first", "Reports guide decisions without guaranteeing income."],
-              ["Pilot verification", "Partner checks are validation targets before scale."],
-              ["Legal review", "Templates and agreements require qualified review before execution."],
-              ["Owner control", "Owners choose whether to activate, hold, or request deeper review."],
-            ].map(([title, copy]) => (
-              <article className="card" key={title}>
-                <h3>{title}</h3>
-                <p>{copy}</p>
+          <div className="trust-card-grid">
+            {trustSafeguards.map((item) => (
+              <article className="trust-card" key={item.title}>
+                <span className="trust-icon">{item.icon}</span>
+                <h3>{item.title}</h3>
+                <p>{item.copy}</p>
               </article>
             ))}
           </div>
+          <div className="trust-tag-row" aria-label="Trust workflow references">
+            {trustTags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+          <p className="trust-note">
+            Final agreements, permissions, land title checks, and tax treatment
+            still require qualified local review before activation.
+          </p>
         </div>
       </section>
 
