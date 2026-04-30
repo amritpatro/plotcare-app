@@ -20,6 +20,20 @@ const mono = Space_Mono({
   variable: "--font-mono",
 });
 
+const contentSecurityPolicy = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com",
+  "style-src 'self' 'unsafe-inline' https://unpkg.com",
+  "img-src 'self' data: blob: https://*.tile.openstreetmap.org",
+  "connect-src 'self' https://api.airtable.com https://*.tile.openstreetmap.org ws://localhost:* ws://127.0.0.1:*",
+  "font-src 'self'",
+  "media-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://plotcare.in"),
   title: {
@@ -47,6 +61,9 @@ export default function RootLayout({
       lang="en"
       className={`${display.variable} ${body.variable} ${mono.variable}`}
     >
+      <head>
+        <meta httpEquiv="Content-Security-Policy" content={contentSecurityPolicy} />
+      </head>
       <body>{children}</body>
     </html>
   );

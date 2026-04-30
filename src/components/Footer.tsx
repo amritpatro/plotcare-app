@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
+import { WhatsAppLink } from "./WhatsAppLink";
 
 export function Footer() {
   return (
@@ -17,6 +18,10 @@ export function Footer() {
         <Link href="/investors">Investors</Link>
         <Link href="/privacy">Privacy</Link>
         <Link href="/terms">Terms</Link>
+        <WhatsAppLink
+          compact
+          message="Hi PlotCare, I want to discuss a land report."
+        />
       </div>
     </footer>
   );

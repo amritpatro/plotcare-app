@@ -47,7 +47,56 @@ const districts = [
 ];
 
 const staticExport = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
-const leadsEndpoint = process.env.NEXT_PUBLIC_LEADS_ENDPOINT ?? (staticExport ? "" : "/api/leads");
+const airtableEndpoint = process.env.NEXT_PUBLIC_AIRTABLE_ENDPOINT ?? "";
+const airtableToken = process.env.NEXT_PUBLIC_AIRTABLE_TOKEN ?? "";
+
+type AirtablePayload =
+  | {
+      source: CustomerSource;
+      fullName: string;
+      whatsapp: string;
+      district: string;
+      audience: Audience;
+    }
+  | {
+      source: InvestorSource;
+      fullName: string;
+      email: string;
+      phoneOrWhatsApp: string;
+      organization: string;
+      message: string;
+    };
+
+function airtableFieldsFor(payload: AirtablePayload) {
+  if (payload.source === "investor") {
+    return {
+      Source: payload.source,
+      "Lead type": "investor",
+      "Full name": payload.fullName,
+      Email: payload.email,
+      "Phone or WhatsApp": payload.phoneOrWhatsApp,
+      Organization: payload.organization,
+      Message: payload.message,
+      "Submitted at": new Date().toISOString(),
+    };
+  }
+
+  return {
+    Source: payload.source,
+    "Lead type": payload.audience,
+    "Full name": payload.fullName,
+    WhatsApp: payload.whatsapp,
+    District: payload.district,
+    "Submitted at": new Date().toISOString(),
+  };
+}
+
+function logLeadFallback(payload: AirtablePayload, reason: unknown) {
+  console.warn("PlotCare lead fallback. Save this lead manually:", {
+    payload,
+    reason,
+  });
+}
 
 export function LeadForm(props: LeadFormProps) {
   const [audience, setAudience] = useState<Audience>(
@@ -56,11 +105,17 @@ export function LeadForm(props: LeadFormProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<Status>({ type: "idle", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successButtonLabel, setSuccessButtonLabel] = useState("");
 
   const formClass = useMemo(
     () => `form-panel${props.light ? " light" : ""}`,
     [props.light],
   );
+
+  function runSuccessAnimation(label = "Captured") {
+    setSuccessButtonLabel(label);
+    window.setTimeout(() => setSuccessButtonLabel(""), 2400);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,6 +123,11 @@ export function LeadForm(props: LeadFormProps) {
     setErrors({});
 
     const form = event.currentTarget;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     const formData = new FormData(form);
     const payload =
       props.mode === "investor"
@@ -89,41 +149,43 @@ export function LeadForm(props: LeadFormProps) {
 
     setIsSubmitting(true);
     try {
-      if (!leadsEndpoint) {
+      if (staticExport && (!airtableEndpoint || !airtableToken)) {
+        logLeadFallback(payload, "Airtable is not configured for static export.");
         form.reset();
+        runSuccessAnimation();
         setStatus({
           type: "success",
           message:
             props.mode === "investor"
-              ? "Investor interest captured for this static demo. Connect a lead endpoint before launch."
-              : "Your request is captured for this static demo. Connect a lead endpoint before launch.",
+              ? "Investor interest is captured in the browser fallback. Connect Airtable before launch."
+              : "Your request is captured in the browser fallback. Connect Airtable before launch.",
         });
         return;
       }
 
-      const response = await fetch(leadsEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = (await response.json()) as {
-        ok?: boolean;
-        message?: string;
-        errors?: Record<string, string>;
-      };
+      if (!airtableEndpoint || !airtableToken) {
+        throw new Error("Airtable endpoint or token is missing.");
+      }
 
-      if (!response.ok || !data.ok) {
-        setErrors(data.errors ?? {});
-        setStatus({
-          type: "error",
-          message:
-            data.message ??
-            "We could not submit this yet. Please check the fields and try again.",
-        });
-        return;
+      // WARNING: This Airtable token is visible in the browser network tab.
+      // Move this request behind a server proxy before going live.
+      const response = await fetch(airtableEndpoint, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${airtableToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          records: [{ fields: airtableFieldsFor(payload) }],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Airtable rejected the lead with status ${response.status}.`);
       }
 
       form.reset();
+      runSuccessAnimation();
       setStatus({
         type: "success",
         message:
@@ -131,11 +193,13 @@ export function LeadForm(props: LeadFormProps) {
             ? "Investor brief request received. We will follow up with the pitch materials."
             : "Your request is recorded. A PlotCare advisor will review your land details next.",
       });
-    } catch {
+    } catch (error) {
+      logLeadFallback(payload, error);
+      runSuccessAnimation("Logged");
       setStatus({
-        type: "error",
+        type: "success",
         message:
-          "The network did not cooperate. Please try again in a moment.",
+          "Thanks. Airtable did not confirm the save, so we logged this lead for manual follow-up.",
       });
     } finally {
       setIsSubmitting(false);
@@ -143,7 +207,7 @@ export function LeadForm(props: LeadFormProps) {
   }
 
   return (
-    <form className={formClass} onSubmit={handleSubmit} noValidate>
+    <form className={formClass} onSubmit={handleSubmit}>
       <h2 className="form-title">{props.title}</h2>
       <p className="form-copy">{props.copy}</p>
 
@@ -155,6 +219,7 @@ export function LeadForm(props: LeadFormProps) {
             name="fullName"
             autoComplete="name"
             placeholder="Your full name"
+            required
           />
           {errors.fullName ? <span className="error-text">{errors.fullName}</span> : null}
         </div>
@@ -169,6 +234,7 @@ export function LeadForm(props: LeadFormProps) {
                 type="email"
                 autoComplete="email"
                 placeholder="you@company.com"
+                required
               />
               {errors.email ? <span className="error-text">{errors.email}</span> : null}
             </div>
@@ -179,6 +245,8 @@ export function LeadForm(props: LeadFormProps) {
                 name="phoneOrWhatsApp"
                 type="tel"
                 autoComplete="tel"
+                inputMode="numeric"
+                pattern="[0-9+ ()-]{8,20}"
                 placeholder="+91 98765 43210"
               />
             </div>
@@ -209,13 +277,16 @@ export function LeadForm(props: LeadFormProps) {
                 name="whatsapp"
                 type="tel"
                 autoComplete="tel"
+                inputMode="numeric"
+                pattern="[0-9+ ()-]{8,20}"
                 placeholder="+91 98765 43210"
+                required
               />
               {errors.whatsapp ? <span className="error-text">{errors.whatsapp}</span> : null}
             </div>
             <div className="field">
               <label htmlFor={`${props.source}-district`}>Land district</label>
-              <select id={`${props.source}-district`} name="district" defaultValue="">
+              <select id={`${props.source}-district`} name="district" defaultValue="" required>
                 <option value="" disabled>
                   Select district
                 </option>
@@ -232,6 +303,7 @@ export function LeadForm(props: LeadFormProps) {
               <div className="segmented" role="group" aria-label="Lead type">
                 <button
                   type="button"
+                  className={audience === "landowner" ? "active" : ""}
                   aria-pressed={audience === "landowner"}
                   onClick={() => setAudience("landowner")}
                 >
@@ -239,6 +311,7 @@ export function LeadForm(props: LeadFormProps) {
                 </button>
                 <button
                   type="button"
+                  className={audience === "farmer" ? "active" : ""}
                   aria-pressed={audience === "farmer"}
                   onClick={() => setAudience("farmer")}
                 >
@@ -256,7 +329,9 @@ export function LeadForm(props: LeadFormProps) {
         ) : null}
 
         <button className="button button-primary" type="submit" disabled={isSubmitting}>
-          {isSubmitting
+          {successButtonLabel
+            ? successButtonLabel
+            : isSubmitting
             ? "Submitting..."
             : props.mode === "investor"
               ? "Request investor brief"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LeafletMap } from "./LeafletMap";
 
 type PreviewType = "locator" | "report" | "partners" | "revenue";
 
@@ -50,20 +51,16 @@ const features = [
 function FeaturePreview({ type }: { type: PreviewType }) {
   if (type === "locator") {
     return (
-      <div className="feature-preview locator-demo" aria-label="Demo land locator map">
-        <div className="locator-road locator-road-a" />
-        <div className="locator-road locator-road-b" />
-        <div className="locator-water" />
-        <div className="locator-boundary">
-          <span className="locator-acre">2.4 ac</span>
-        </div>
-        <span className="map-pin pin-main" />
-        <span className="map-pin pin-road" />
+      <LeafletMap
+        className="feature-preview locator-demo leaflet-feature-map"
+        label="Live Visakhapatnam land locator map"
+        compact
+      >
         <div className="locator-card">
           <span>Survey AP-VZK-2841</span>
           <strong>Boundary confidence 82%</strong>
         </div>
-      </div>
+      </LeafletMap>
     );
   }
 

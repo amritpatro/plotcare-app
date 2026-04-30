@@ -1,10 +1,39 @@
+/*
+Phase 2 enhancement changelog:
+1. Replaced static land-map mockups with live Leaflet maps centered on Visakhapatnam.
+2. Added an 18 percent opacity hero video layer with graceful missing-file fallback.
+3. Added subtle breathing motion to the hero topographic SVG at 0.06 opacity.
+4. Added a fixed 3px amber-to-terracotta scroll progress bar.
+5. Added isolated 30 percent scroll-speed parallax for the hero topographic wrapper.
+6. Added WhatsApp chat entry points in the hero, farmer section, and footer.
+7. Replaced lead submission with Airtable posting plus console lead fallback.
+8. Added the Investor Metrics section on the investor page.
+9. Added the Land Pulse NDVI health-report section between landowners and farmers.
+10. Added a schematic Andhra Pradesh district map with Visakhapatnam highlighted.
+*/
+/*
+Phase 2 bug and security audit changelog:
+- Guarded browser-only DOM access and Leaflet initialization behind client effects.
+- Kept scroll DOM writes inside requestAnimationFrame with passive scroll listeners.
+- Added a CSP meta tag for the external CDNs and APIs used by Phase 2.
+- Avoided innerHTML for user/API text, keeping AI and lead messages as React text.
+- Added the Airtable browser-token warning and removed hardcoded token assumptions.
+- Added reduced-motion overrides for decorative animation and parallax layers.
+- Isolated parallax transforms on a wrapper so the inner SVG pulse can animate safely.
+- Added mobile single-column rules, 48px touch targets, required district selection, tel patterns, and active pill classes.
+- Added runSuccessAnimation before form submission calls use it.
+*/
 import { AiAdvisor } from "@/components/AiAdvisor";
 import { ArrowIcon } from "@/components/ArrowIcon";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FeatureTabs } from "@/components/FeatureTabs";
 import { Footer } from "@/components/Footer";
+import { HeroBackgroundLayers } from "@/components/HeroBackgroundLayers";
+import { LeafletMap } from "@/components/LeafletMap";
 import { LeadForm } from "@/components/LeadForm";
 import { SiteNav } from "@/components/SiteNav";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { WhatsAppLink } from "@/components/WhatsAppLink";
 import Image from "next/image";
 
 const basePath = process.env.PAGES_BASE_PATH ?? "";
@@ -155,10 +184,12 @@ const faqs = [
 export default function Home() {
   return (
     <main className="site-shell">
+      <ScrollProgress />
       <SiteNav />
 
       <section className="hero" id="top">
-        <div>
+        <HeroBackgroundLayers basePath={basePath} />
+        <div className="hero-content">
           <div className="eyebrow"><span className="dot" /> Starting with Andhra Pradesh idle land</div>
           <h1 className="headline">
             Your land exists. Make it <span>earn.</span>
@@ -176,6 +207,10 @@ export default function Home() {
               See workflow
             </a>
           </div>
+          <WhatsAppLink
+            className="hero-whatsapp"
+            message="Hi PlotCare, I want to understand what my land can earn."
+          />
           <div className="hero-proof">
             <div className="proof-chip">Pre-launch validation focused on Visakhapatnam and AP landowners.</div>
             <div className="proof-chip">Designed for absentee, urban, and NRI land ownership realities.</div>
@@ -187,7 +222,7 @@ export default function Home() {
           />
         </div>
 
-        <div id="lead-form">
+        <div id="lead-form" className="hero-side">
           <LeadForm
             mode="customer"
             source="hero"
@@ -256,9 +291,10 @@ export default function Home() {
             </div>
           </div>
           <div className="dashboard">
-            <div className="map-window">
-              <div className="plot-shape" />
-            </div>
+            <LeafletMap
+              className="map-window"
+              label="Live Visakhapatnam land report map"
+            />
             <div className="dashboard-row"><span>Plot profile</span><strong>2.4 acres, AP coast</strong></div>
             <div className="dashboard-row"><span>Top fit</span><strong>Mushroom + nursery pilot</strong></div>
             <div className="dashboard-row"><span>Next step</span><strong>Water and access validation</strong></div>
@@ -367,6 +403,38 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section dark land-pulse-section">
+        <div className="section-inner land-pulse-grid">
+          <div>
+            <p className="section-kicker">Land Pulse</p>
+            <h2 className="section-title">
+              Satellite health signals make remote land ownership less blind.
+            </h2>
+            <p className="section-copy">
+              The report mockup shows how PlotCare can translate NDVI-style
+              vegetation health, water stress, and access signals into a
+              landowner-friendly readiness view before activation.
+            </p>
+          </div>
+          <div className="ndvi-card" aria-label="NDVI satellite health report mockup">
+            <div className="ndvi-header">
+              <span>NDVI health report</span>
+              <strong>VZK-2841</strong>
+            </div>
+            <div className="ndvi-tiles" aria-hidden="true">
+              {Array.from({ length: 36 }).map((_, index) => (
+                <span key={index} className={`ndvi-tile ndvi-${index % 5}`} />
+              ))}
+            </div>
+            <div className="ndvi-readouts">
+              <div><span>Vegetation</span><strong>74 / 100</strong></div>
+              <div><span>Water stress</span><strong>Medium</strong></div>
+              <div><span>Action</span><strong>Verify irrigation</strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section paper" id="for-farmers">
         <div className="section-inner grid-2" style={{ alignItems: "start" }}>
           <div>
@@ -383,6 +451,10 @@ export default function Home() {
             <a className="button button-dark" href="#farmer-form">
               Apply as farmer partner <ArrowIcon />
             </a>
+            <WhatsAppLink
+              className="farmer-whatsapp"
+              message="Hi PlotCare, I want to apply as a farmer or operator partner."
+            />
           </div>
           <div id="farmer-form">
             <LeadForm
