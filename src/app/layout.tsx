@@ -31,7 +31,6 @@ const contentSecurityPolicy = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors 'none'",
 ].join("; ");
 
 export const metadata: Metadata = {

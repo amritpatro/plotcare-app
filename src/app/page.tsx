@@ -25,19 +25,22 @@ Phase 2 bug and security audit changelog:
 */
 import { AiAdvisor } from "@/components/AiAdvisor";
 import { ArrowIcon } from "@/components/ArrowIcon";
+import { CinematicBackdrop } from "@/components/CinematicBackdrop";
+import { ClientOnlyLeadForm } from "@/components/ClientOnlyLeadForm";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { FeatureTabs } from "@/components/FeatureTabs";
 import { Footer } from "@/components/Footer";
 import { HeroBackgroundLayers } from "@/components/HeroBackgroundLayers";
 import { LeafletMap } from "@/components/LeafletMap";
-import { LeadForm } from "@/components/LeadForm";
 import { SiteNav } from "@/components/SiteNav";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+import { hasPublicAsset } from "@/lib/publicAssets";
 import Image from "next/image";
 
 const basePath = process.env.PAGES_BASE_PATH ?? "";
 const imagePath = (path: string) => `${basePath}${path}`;
+const hasHeroVideo = hasPublicAsset("/videos/plotcare-hero.mp4");
 
 const problemCards = [
   {
@@ -188,7 +191,8 @@ export default function Home() {
       <SiteNav />
 
       <section className="hero" id="top">
-        <HeroBackgroundLayers basePath={basePath} />
+        <HeroBackgroundLayers basePath={basePath} showVideo={hasHeroVideo} />
+        <CinematicBackdrop tone="hero" />
         <div className="hero-content">
           <div className="eyebrow"><span className="dot" /> Starting with Andhra Pradesh idle land</div>
           <h1 className="headline">
@@ -223,7 +227,7 @@ export default function Home() {
         </div>
 
         <div id="lead-form" className="hero-side">
-          <LeadForm
+          <ClientOnlyLeadForm
             mode="customer"
             source="hero"
             title="Analyse your land free"
@@ -232,7 +236,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section paper">
+      <section className="section paper cinematic-section">
+        <CinematicBackdrop tone="paper" />
         <div className="section-inner">
           <p className="section-kicker">The problem</p>
           <h2 className="section-title">
@@ -253,7 +258,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section dark topo" id="how-it-works">
+      <section className="section dark topo cinematic-section" id="how-it-works">
+        <CinematicBackdrop tone="forest" />
         <div className="section-inner">
           <p className="section-kicker">How it works</p>
           <h2 className="section-title">From plot details to an activation plan.</h2>
@@ -272,7 +278,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section sage" id="land-report">
+      <section className="section sage cinematic-section" id="land-report">
+        <CinematicBackdrop tone="sage" />
         <div className="section-inner grid-2" style={{ alignItems: "center" }}>
           <div>
             <p className="section-kicker">Land Intelligence Report</p>
@@ -366,7 +373,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section dark" id="platform">
+      <section className="section dark cinematic-section" id="platform">
+        <CinematicBackdrop tone="forest" />
         <div className="section-inner">
           <p className="section-kicker">The platform</p>
           <h2 className="section-title">
@@ -403,7 +411,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section dark land-pulse-section">
+      <section className="section dark land-pulse-section cinematic-section">
+        <CinematicBackdrop tone="forest" />
         <div className="section-inner land-pulse-grid">
           <div>
             <p className="section-kicker">Land Pulse</p>
@@ -457,7 +466,7 @@ export default function Home() {
             />
           </div>
           <div id="farmer-form">
-            <LeadForm
+            <ClientOnlyLeadForm
               mode="customer"
               source="farmer_partner"
               title="Farmer partner interest"
@@ -552,7 +561,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section dark topo" id="final-cta">
+      <section className="section dark topo cinematic-section" id="final-cta">
+        <CinematicBackdrop tone="forest" />
         <div className="section-inner grid-2" style={{ alignItems: "center" }}>
           <div>
             <p className="section-kicker">Join validation</p>
@@ -564,7 +574,7 @@ export default function Home() {
               help shape the product before launch.
             </p>
           </div>
-          <LeadForm
+          <ClientOnlyLeadForm
             mode="customer"
             source="final_cta"
             title="Get your first review"

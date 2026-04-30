@@ -7,7 +7,7 @@ type CustomerSource = "hero" | "final_cta" | "farmer_partner";
 type InvestorSource = "investor";
 type Audience = "landowner" | "farmer";
 
-type LeadFormProps =
+export type LeadFormProps =
   | {
       mode: "customer";
       source: CustomerSource;

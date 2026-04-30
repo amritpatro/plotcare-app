@@ -46,3 +46,19 @@ Server features such as `/api/leads` and `/api/ai` do not run on GitHub Pages. F
 npm run lint
 npm run build
 ```
+
+## Auto Commit Helper
+
+Run the helper after a meaningful change:
+
+```powershell
+npm run auto-commit -- -Message "Describe the change"
+```
+
+The script fetches and rebases the current branch, filters generated files,
+stages meaningful project changes, commits, and pushes to GitHub. Preview what
+would be included without committing:
+
+```powershell
+npm run auto-commit -- -DryRun
+```

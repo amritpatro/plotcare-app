@@ -2245,3 +2245,260 @@ a {
     display: none;
   }
 }
+
+/* Hydration-safe form shell and cinematic background additions. */
+.form-panel-skeleton {
+  min-height: 510px;
+}
+
+.form-panel-skeleton .form-grid {
+  pointer-events: none;
+}
+
+.form-skeleton-line,
+.form-skeleton-button {
+  display: block;
+  min-height: 54px;
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 250, 240, 0.13), transparent),
+    rgba(255, 255, 255, 0.08);
+  background-size: 220% 100%, 100% 100%;
+  animation: formSkeletonShimmer 2.4s ease-in-out infinite;
+}
+
+.form-skeleton-line.wide {
+  min-height: 78px;
+}
+
+.form-skeleton-button {
+  margin-top: 2px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 250, 240, 0.18), transparent),
+    var(--amber);
+}
+
+.form-panel-skeleton.light .form-skeleton-line {
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 250, 240, 0.7), transparent),
+    rgba(13, 43, 30, 0.08);
+}
+
+.form-panel-skeleton.light .form-skeleton-button {
+  background:
+    linear-gradient(90deg, transparent, rgba(255, 250, 240, 0.7), transparent),
+    var(--forest);
+}
+
+.hero-depth-fields {
+  z-index: 0;
+  overflow: hidden;
+  opacity: 0.24;
+  mix-blend-mode: screen;
+}
+
+.field-ridge {
+  position: absolute;
+  left: -12%;
+  width: 124%;
+  height: 20%;
+  border-top: 1px solid rgba(245, 240, 232, 0.18);
+  border-radius: 50%;
+  transform-origin: center;
+  animation: fieldRidgeDrift 22s ease-in-out infinite;
+}
+
+.field-ridge-one {
+  top: 58%;
+  transform: rotate(-4deg) translate3d(0, 0, 0);
+}
+
+.field-ridge-two {
+  top: 68%;
+  transform: rotate(5deg) translate3d(0, 0, 0);
+  animation-delay: -7s;
+}
+
+.field-ridge-three {
+  top: 78%;
+  transform: rotate(-8deg) translate3d(0, 0, 0);
+  animation-delay: -13s;
+}
+
+.hero-film-grain {
+  opacity: 0.1;
+  mix-blend-mode: soft-light;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 250, 240, 0.08) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(5, 18, 12, 0.16) 0 1px, transparent 1px 5px);
+}
+
+.hero,
+.cinematic-section {
+  isolation: isolate;
+}
+
+.cinematic-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero > .cinematic-backdrop,
+.cinematic-section > .cinematic-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero > .cinematic-backdrop {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.cinematic-section > .section-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.cinematic-backdrop {
+  --cinematic-line: rgba(245, 240, 232, 0.14);
+  --cinematic-soft-line: rgba(245, 240, 232, 0.07);
+  --cinematic-glow: rgba(240, 160, 64, 0.18);
+  --cinematic-shadow: rgba(5, 18, 12, 0.34);
+}
+
+.cinematic-paper {
+  --cinematic-line: rgba(13, 43, 30, 0.1);
+  --cinematic-soft-line: rgba(13, 43, 30, 0.055);
+  --cinematic-glow: rgba(240, 160, 64, 0.16);
+  --cinematic-shadow: rgba(13, 43, 30, 0.04);
+}
+
+.cinematic-sage {
+  --cinematic-line: rgba(13, 43, 30, 0.12);
+  --cinematic-soft-line: rgba(13, 43, 30, 0.06);
+  --cinematic-glow: rgba(76, 175, 122, 0.15);
+  --cinematic-shadow: rgba(13, 43, 30, 0.08);
+}
+
+.cinematic-horizon,
+.cinematic-field-lines,
+.cinematic-light-sweep,
+.cinematic-grain {
+  position: absolute;
+  inset: 0;
+}
+
+.cinematic-horizon {
+  top: auto;
+  height: 48%;
+  background:
+    linear-gradient(180deg, transparent, var(--cinematic-shadow)),
+    repeating-linear-gradient(
+      178deg,
+      transparent 0 34px,
+      var(--cinematic-line) 35px 36px,
+      transparent 37px 68px
+    );
+  opacity: 0.74;
+  transform: translate3d(0, 10%, 0);
+  animation: cinematicHorizonDrift 26s ease-in-out infinite;
+}
+
+.cinematic-field-lines {
+  background:
+    repeating-radial-gradient(
+      ellipse at 50% 105%,
+      transparent 0 62px,
+      var(--cinematic-soft-line) 63px 65px,
+      transparent 66px 132px
+    );
+  opacity: 0.72;
+  transform: translate3d(-1.5%, 0, 0);
+  animation: cinematicFieldDrift 32s ease-in-out infinite;
+}
+
+.cinematic-light-sweep {
+  width: 42%;
+  background: linear-gradient(90deg, transparent, var(--cinematic-glow), transparent);
+  opacity: 0.48;
+  transform: skewX(-18deg) translateX(-145%);
+  animation: cinematicSweep 18s ease-in-out infinite;
+}
+
+.cinematic-grain {
+  opacity: 0.08;
+  mix-blend-mode: soft-light;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255, 250, 240, 0.09) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(90deg, rgba(5, 18, 12, 0.18) 0 1px, transparent 1px 7px);
+}
+
+@keyframes formSkeletonShimmer {
+  0% {
+    background-position: 180% 0, 0 0;
+  }
+
+  100% {
+    background-position: -80% 0, 0 0;
+  }
+}
+
+@keyframes fieldRidgeDrift {
+  0%,
+  100% {
+    margin-left: 0;
+  }
+
+  50% {
+    margin-left: 3%;
+  }
+}
+
+@keyframes cinematicHorizonDrift {
+  0%,
+  100% {
+    transform: translate3d(0, 10%, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 6%, 0);
+  }
+}
+
+@keyframes cinematicFieldDrift {
+  0%,
+  100% {
+    transform: translate3d(-1.5%, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(1.5%, -1%, 0);
+  }
+}
+
+@keyframes cinematicSweep {
+  0%,
+  30% {
+    transform: skewX(-18deg) translateX(-145%);
+  }
+
+  68%,
+  100% {
+    transform: skewX(-18deg) translateX(285%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form-skeleton-line,
+  .form-skeleton-button,
+  .field-ridge,
+  .cinematic-horizon,
+  .cinematic-field-lines,
+  .cinematic-light-sweep {
+    animation: none !important;
+  }
+}

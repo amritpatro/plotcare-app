@@ -4,11 +4,16 @@ import { useEffect, useRef, useState } from "react";
 
 type HeroBackgroundLayersProps = {
   basePath?: string;
+  showVideo?: boolean;
 };
 
-export function HeroBackgroundLayers({ basePath = "" }: HeroBackgroundLayersProps) {
+export function HeroBackgroundLayers({
+  basePath = "",
+  showVideo = false,
+}: HeroBackgroundLayersProps) {
   const topoRef = useRef<HTMLDivElement>(null);
   const [videoFailed, setVideoFailed] = useState(false);
+  const videoSource = `${basePath}/videos/plotcare-hero.mp4`;
 
   useEffect(() => {
     const wrapper = topoRef.current;
@@ -48,17 +53,19 @@ export function HeroBackgroundLayers({ basePath = "" }: HeroBackgroundLayersProp
 
   return (
     <>
-      <video
-        className={`hero-video-layer hero-background-layer${videoFailed ? " is-hidden" : ""}`}
-        autoPlay
-        loop
-        muted
-        playsInline
-        aria-hidden="true"
-        onError={() => setVideoFailed(true)}
-      >
-        <source src={`${basePath}/videos/plotcare-hero.mp4`} type="video/mp4" />
-      </video>
+      {showVideo && !videoFailed ? (
+        <video
+          className="hero-video-layer hero-background-layer"
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+          onError={() => setVideoFailed(true)}
+        >
+          <source src={videoSource} type="video/mp4" />
+        </video>
+      ) : null}
       <div
         ref={topoRef}
         className="hero-topo-parallax hero-background-layer"
@@ -80,6 +87,12 @@ export function HeroBackgroundLayers({ basePath = "" }: HeroBackgroundLayersProp
           </g>
         </svg>
       </div>
+      <div className="hero-depth-fields hero-background-layer" aria-hidden="true">
+        <span className="field-ridge field-ridge-one" />
+        <span className="field-ridge field-ridge-two" />
+        <span className="field-ridge field-ridge-three" />
+      </div>
+      <div className="hero-film-grain hero-background-layer" aria-hidden="true" />
     </>
   );
 }

@@ -26,12 +26,14 @@ Phase 2 bug and security audit changelog:
 import type { Metadata } from "next";
 import { AndhraDistrictMap } from "@/components/AndhraDistrictMap";
 import { ArrowIcon } from "@/components/ArrowIcon";
+import { CinematicBackdrop } from "@/components/CinematicBackdrop";
+import { ClientOnlyLeadForm } from "@/components/ClientOnlyLeadForm";
 import { Footer } from "@/components/Footer";
 import { HeroBackgroundLayers } from "@/components/HeroBackgroundLayers";
 import { LeafletMap } from "@/components/LeafletMap";
-import { LeadForm } from "@/components/LeadForm";
 import { SiteNav } from "@/components/SiteNav";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { hasPublicAsset } from "@/lib/publicAssets";
 
 export const metadata: Metadata = {
   title: "Investor Brief",
@@ -40,6 +42,7 @@ export const metadata: Metadata = {
 };
 
 const basePath = process.env.PAGES_BASE_PATH ?? "";
+const hasHeroVideo = hasPublicAsset("/videos/plotcare-hero.mp4");
 
 const marketSources = [
   {
@@ -102,7 +105,8 @@ export default function InvestorsPage() {
       <SiteNav variant="investor" />
 
       <section className="hero">
-        <HeroBackgroundLayers basePath={basePath} />
+        <HeroBackgroundLayers basePath={basePath} showVideo={hasHeroVideo} />
+        <CinematicBackdrop tone="hero" />
         <div className="hero-content">
           <div className="eyebrow"><span className="dot" /> Investor brief / pre-launch</div>
           <h1 className="headline">
@@ -155,7 +159,8 @@ export default function InvestorsPage() {
         </div>
       </section>
 
-      <section className="section dark topo" id="market">
+      <section className="section dark topo cinematic-section" id="market">
+        <CinematicBackdrop tone="forest" />
         <div className="section-inner">
           <p className="section-kicker">Market thesis</p>
           <h2 className="section-title">
@@ -178,7 +183,8 @@ export default function InvestorsPage() {
         </div>
       </section>
 
-      <section className="section paper investor-metrics-section" id="investor-metrics">
+      <section className="section paper investor-metrics-section cinematic-section" id="investor-metrics">
+        <CinematicBackdrop tone="paper" />
         <div className="section-inner">
           <p className="section-kicker">Investor metrics</p>
           <h2 className="section-title">
@@ -196,7 +202,8 @@ export default function InvestorsPage() {
         </div>
       </section>
 
-      <section className="section paper" id="model">
+      <section className="section paper cinematic-section" id="model">
+        <CinematicBackdrop tone="paper" />
         <div className="section-inner">
           <p className="section-kicker">Business model</p>
           <h2 className="section-title">
@@ -286,7 +293,8 @@ export default function InvestorsPage() {
         </div>
       </section>
 
-      <section className="section dark topo" id="investor-brief">
+      <section className="section dark topo cinematic-section" id="investor-brief">
+        <CinematicBackdrop tone="forest" />
         <div className="section-inner grid-2" style={{ alignItems: "center" }}>
           <div>
             <p className="section-kicker">Investor CTA</p>
@@ -299,7 +307,7 @@ export default function InvestorsPage() {
               validation milestones.
             </p>
           </div>
-          <LeadForm
+          <ClientOnlyLeadForm
             mode="investor"
             source="investor"
             title="Request investor brief"
